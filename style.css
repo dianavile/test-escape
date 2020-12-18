@@ -1,0 +1,43 @@
+html {
+	height: 100vh;
+}
+
+body {
+	min-height: 100vh;
+  	font-family: "Source Sans Pro",sans-serif;
+	background-color: black;
+	  
+}
+
+.main {
+	display: grid;
+	grid-template-columns: 1fr 18fr 1fr;
+	grid-template-rows: 170px minmax(max-content, 75vh) 100px;	
+}
+
+.header{
+	text-align:center;
+	grid-column-start: 1;
+	grid-column-end: 4;
+	grid-row-start: 1;
+	grid-row-end: 2;
+}
+
+.content{
+	grid-column-start: 2;
+	grid-column-end: 3;
+	grid-row-start: 2;
+	grid-row-end: 3;
+	padding:2px;
+	font-size:1.15rem;
+	background-color: black; 
+	text-align: center;
+}
+
+.footer {
+	grid-column-start: 1;
+	grid-column-end: 4;
+	grid-row-start: 3;
+	grid-row-end: 4;
+	text-align:center;
+}

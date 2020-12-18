@@ -1,0 +1,99 @@
+html{
+   font-size: 62.5%;
+}
+body{
+  background-color: black;
+}
+
+h1 {
+  font-family: cursive;
+}
+
+.header {
+  text-align: center;
+  grid-column: 1/7;
+  grid-row: 1/2;
+  margin-bottom: 10px;
+}
+
+.subtitle{
+  color: white;
+  font-size: 2rem;
+}
+
+.title, .subtitle{
+  color: white;
+  font-size: 4rem;
+}
+
+.grid-container{
+  display: grid; 
+  grid-template-columns: auto auto auto auto;
+  grid-gap: 5px;
+  background-color: black;
+  padding: 5px;
+}
+
+.grid-container > div {
+  border: 1px solid black;
+  text-align: center;
+  font-size: 80px;
+  height: 100px;
+}
+
+a {
+  color:white;
+  width: 1fr;
+  display: block; 
+  text-decoration: none;
+}
+
+.item1 {
+  background-color: #fa9579;
+}
+.item2 {
+  background-color: #654062;
+}
+.item3 {
+  background-color:#65d6ce;
+}
+.item4 {
+  background-color: #ffe9d6;
+}
+.item5 {
+  background-color: #1dd3bd; 
+}
+ .item6 {
+  background-color:   #595238;
+}
+.item7 {
+  background-color:  #2bb2bb;
+}
+.item8 {
+  background-color:  #c62a88;
+}
+.item9 {
+  background-color: #150485;
+}
+.item10 {
+  background-color:#87d4c5;
+}
+.item11 {
+  background-color:#590995;
+}
+.item12 {
+  background-color: #03c4a1;
+}
+.item13 {
+  background-color: #f6efa6;
+}
+.item14 {
+  background-color:#df5e88;
+}
+.item15 {
+  background-color: #eeeeee;
+}
+.item16 {
+  background-color:#f6ab6c;
+}
+ 

@@ -1,0 +1,25 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+      <link href="challenge2.css" rel="stylesheet" type="text/css"/>
+  </head>
+  <body>
+    <h1> Ingrese el código.</h1>
+      <input type="number" id="input">
+        <button onclick="check()"> controlar </button>
+          <a href="challenge3.html"><div id="challenge3">👍</div></a>
+      <a href="error.html"><div id="wrong">👎</div></a><br>
+        <img src="../assets/img/virus2.jpg" alt="virus2" width="80%" height="80%">
+    
+  </body>
+</html>
+<script>
+  function check() {
+    let code = document.getElementById("input").value;
+      if (code == 2021) {
+        document.getElementById("challenge3").style = "display:block;";
+      } else {
+        document.getElementById("wrong").style = "display:block;";
+      }
+    }
+</script>

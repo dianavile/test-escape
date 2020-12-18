@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <!-- meta -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="EscapeRoom| Diana Vilé & Jonatán Llédo">
+  <meta name="keywords" content="EscapeRoom">
+  <meta name="theme-color" content="#29c7ac">
+  <!-- stylesheet -->
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link href="intro.css" rel="stylesheet" type="text/css"/>
+  <!-- title -->
+  <title>EscapeRoom</title>
+  <script src="script.js"></script>
+</head>
+
+  <body>
+    <header class="header"></header>
+    <!-- GAMEINSTRUCTIONS-->
+    <main class=main>
+      <section class="gameinstructions">
+          <h1 class="title">Virus alert</h1>
+          <div class="content">
+            <h3 class="subtitle">La humanidad ha sido atacada por un virus.</h3>
+              <img id="intro-photo" src="./assets/img/virus.png"><br>
+              <h4 class="subtitle">Hay que sobrevivir cómo sea..</h4>
+                <button onclick="startGame()"> start</button>   
+                  <a href="index.html"><button id="1">Next</button></a>
+              <br>  
+          </div>
+      </section>
+    </main>
+    <footer class="footer"></footer> 
+    <script>
+    //startGame
+    function startGame() {
+    suspense.play();
+    document.getElementById("next").style.display = "initial";
+    }
+    </script>
+  </body>
+</html>
+ 

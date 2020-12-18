@@ -1,0 +1,48 @@
+html {
+	height: 100vh;
+}
+
+body {
+	min-height: 100vh;
+  font-family: "Source Sans Pro",sans-serif;
+  background-color: black;
+  text-align:center;	  
+}
+
+.content{
+	grid-column-start: 2;
+	grid-column-end: 3;
+	grid-row-start: 2;
+	grid-row-end: 3;
+  /* font-size:2rem; */
+  color: white;
+	background-color: black; 
+	text-align: center;
+}
+
+.title{
+  font-size: 2rem;
+  color: red;
+  text-align: center;
+  display: inline-block;
+}
+
+.countdown-clock{
+    color: red;
+    font-size: 2em;
+    font-weight: bold;
+}
+
+button {
+  color: #00b3b4;
+  width:5%;
+  height: 5%;
+  font-size: 20px;
+  font-weight: bolder;
+  border-style: inset;
+}
+
+#next{
+  display: none;
+}
+
