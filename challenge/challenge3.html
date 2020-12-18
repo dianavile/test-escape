@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="es">
+ <head>
+    <!-- meta -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="EscapeRoom| Diana Vilé & Jonatán Llédo">
+    <meta name="keywords" content="EscapeRoom">
+    <meta name="theme-color" content="#29c7ac">
+    <!-- stylesheet -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link href="challenge3.css" rel="stylesheet" type="text/css"/>
+    <!-- title -->
+    <title>EscapeRoom</title>
+  </head>
+
+<!--TODO: add img to game, not sure how to, so add as comment.-->
+<body>
+	<!-- game -->
+	<header></header>
+	<h1 class="title"> Escapar del virus</h1>
+	<main class="grid-container">	
+		<div id="log"></div>
+		<!-- <div id="map"></div> -->
+		<div id="inv">
+			<button id="opt1" onclick="Game.opt1()"></button>
+			<button id="opt2" onclick="Game.opt2()"></button>
+			<!-- HINTS -->
+			<div id="detopt">
+				<button id="jabón" onclick="Game.defend('jabón')">🧼lávese las manos</button>
+				<button id="mascarilla" onclick="Game.defend('mascarilla')">😷 usar mascarilla </button>
+				<button id="mantener distancia"onclick="Game.defend('mantener distancia')">🧍↔️🧍 mantener distancia</button>
+				<button id="ambulance" onclick="Game.defend('ambulance')">🚑 entrar en la ambulancia</button>
+				<button id="hospital" onclick="Game.defend('hospital')">🏥 ir al hospital</button>		
+				<button id="escapar" onclick="Game.defend('escapar')">💉escapar</button> 
+			</div>
+			<div id="content"></div>
+		</div>		
+	</main>
+	<footer></footer>
+
+	<script>
+		function l(what){
+			return document.getElementById(what);
+		}
+		
+		let Game = {
+			turn: 0,
+			pos: "virus",
+			inv: [],
+			txt: "",
+			// img: "",
+			crooks: 6,
+			ammo: 4,
+			startturn: function(where){
+				pos = where;
+				switch (where){
+					case "virus":
+						if(Game.has("vacuna")){
+							Game.win()
+							break;
+						}
+						l("opt1").innerHTML = "baño";
+						l("opt2").innerHTML = "calle";
+						txt = "El virus crece. La pandemia esta descontrolada: la tasa de propagacion continúa subiendo. ¡Ten mucho cuidado!";
+						// img = "./assets/img/rooms/room1.jpg";
+						break;
+					case "baño":
+						l("opt1").innerHTML = "distancia";
+						l("opt2").innerHTML = "virus";
+						txt = "Te llevas tus manos despues de encontrar con una amiga.";
+						//img = "./assets/img/rooms/room2.jpg";
+						if(Game.has("llave")){
+							txt += "¡Felicidades! Descubriste una forma de mantenerte a salvo. Aquí una clave para resolver la pandemia de Covid-19."
+							Game.addtoinv("llave");
+						}
+						break;
+					case "casa":
+						l("opt1").innerHTML = "casa";
+						l("opt2").innerHTML = "cocina";
+						txt = "Te quedas en casa, pero comenzas estornudar.";
+						//img = "./assets/img/covid.jpg";
+						break;
+					case "distancia":
+						l("opt1").innerHTML = "calle";
+						l("opt2").innerHTML = "baño";
+						txt = "Te preguntas cuándo va a colapsar. mantener distancia te ayudará estar segura.";
+						//img = "./assets/img/rooms/distancia.jpg";
+						Game.addtoinv("mantener distancia");
+						break;
+					case "cafetaria":
+						l("opt1").innerHTML = "trabajar desde casa";
+						l("opt2").innerHTML = "restaurante";
+						txt = "Prefieres ver a tus amigos en un bar, pero es mejor que te vayas a casa.";
+						//img = "./assets/img/rooms/stop.jpg";
+						break;
+					case "cocina":
+						l("opt1").innerHTML = "restaurante";
+						l("opt2").innerHTML = "escalera";
+						txt = "¿Por qué hay escaleras en la cocina? ¿Estás tratando de escapar al restaurante?";
+						//img = "./assets/img/rooms/stayhome.png";
+						break;
+					case "trabajar desde casa":
+						l("opt1").innerHTML = "cafetaria";
+						l("opt2").innerHTML = "mesa de trabajo";
+						txt = "Trabajar desde casa no es fácil. Te mereces un premio. Aquí otro lleva.";
+						//img = "./assets/img/rooms/work-at-home.jpg";
+						break;
+					case "restaurante":
+						l("opt1").innerHTML = "cocina";
+						l("opt2").innerHTML = "cafetaria";
+						txt = "El restaurante está lleno de gente. Es mejor no comer afuera.";
+						//img = "./assets/img/rooms/room3.jpg";
+						if(Math.random()<0.8 && !Game.has("llave trabajar desde casa")){txt += "Notas una pequeña llave en la mesa. (+ llave trabajar desde casa)"; Game.addtoinv("llave trabajar desde casa");}
+						break;
+					case "mesa de trabajo":
+						l("opt1").innerHTML = "trabajar desde casa";
+						l("opt2").innerHTML = "trabajar desde casa";
+						if(Game.has("llave trabajar desde casa")){
+							txt = "¡Felicidades! Descubriste una forma de mantenerte a salvo. Aquí una clave para resolver la pandemia de Covid-19.";
+							Game.addtoinv("llave trabajar desde casa");
+						}
+						else{
+							txt = "Escapaste al restaurante y te infectaste con Covid-19.";
+							//img = "./assets/img/rooms/room4.jpg";
+						}
+						break;
+					case "escalera":
+						l("opt1").innerHTML = "baño";
+						l("opt2").innerHTML = "calle (lleno de gente)";
+						txt = "Encontraste una ruta de escape. ¿De verdad quieres salir?";
+						//img = "./assets/img/rooms/world.jpg";
+						break;
+					case "calle (lleno de gente)":
+						// l("opt1").innerHTML = "room";//no me recuerda el room.
+						l("opt2").innerHTML = "cuarto de dormir";
+						txt = "¡Vete a casa! Si está infectado,  defiéndase o testeate.";
+						//img = "./assets/img/rooms/covid-test.jpg";
+						if(Math.random<0.1){
+							Game.detected()
+						}
+						break;
+					case "baño":
+						l("opt1").innerHTML = "escalera";
+						l("opt2").innerHTML = "calle (vacía)";
+						txt = "El baño se ve bastante limpio Sobre la mesa de lavado hay jabón.";
+						Game.addtoinv("jabón");
+						break;
+					case "cuarto de dormir":
+						l("opt1").innerHTML = "calle (lleno de gente)";
+						l("opt2").innerHTML = "mesilla de noche";
+						txt = "El cuarto de dormir solamente tiene una mesilla de noche. Abreló. Te sorprenderas.";
+						break;
+					case "mesilla de noche":
+						if(Math.random()<0.25){
+							Game.detected()
+						}else{
+							txt = "¡Éxito! Aparece una máscara para defenderse. Úselo como protección.";
+							Game.addtoinv("usar mascarilla");
+						}
+						l("opt1").innerHTML = "cuarto de dormir";
+						l("opt2").innerHTML = "cuarto de dormir";
+						break;
+					case "calle (vacía)":
+						l("opt1").innerHTML = "calle (lleno de gente)";
+						l("opt2").innerHTML = "ambulancia";
+						txt = "No hay nadie en la calle. puede empotrarse libremente, con una mascarilla.";
+						if(Math.random()<0.1){Game.detected();}
+						break;
+					case "ambulancia":
+						l("opt1").innerHTML = "calle (infected)";
+						l("opt2").innerHTML = "calle (vacía)";
+						txt = "No te sientes muy bien. Experimentas algunos síntomas de virus. Llama a la ambulancia.";
+						if(Math.random()<0.3){
+							txt += "Probablemente estarás bien, ya que mantuvo su distancia.";
+							if(Game.has("mantener distancia")){
+								txt += "¿Tu recuerdas de mantener distancia? Afortunadamente encontraste el hospital. Estas a salvo.";
+								Game.addtoinv("hospital");
+							}
+						}
+						if(Math.random()<0.1){
+							Game.detected();
+						}
+						break;
+					case "calle (infectado)":
+						l("opt1").innerHTML = "hospital";
+						l("opt2").innerHTML = "cuidados intensivos";
+						txt = "¡Demasiado tarde! Ya estas infectado. Hora de testear.";
+						if(Math.random<0.15){Game.detected();}
+						break;
+					case "hospital":
+						l("opt1").innerHTML = "ambulancia";
+						l("opt2").innerHTML = "laboratorio"
+						txt = "El laboratorio está cerrado con dos cadenas de hierro. No hay forma de entrar en ese lugar sin una llave.";
+						break;
+					case "laboratorio":
+						if(Game.has("llave")){
+							l("opt1").innerHTML = "hospital";
+							l("opt2").innerHTML = "hospital";
+							txt = "El laboratorio se abre. Encuentras el código antivirus: '4786'";
+							Game.addtoinv("Código: 4786");
+						}else{
+							l("log").innerHTML += "<p><b>laboratorio</b>: Sin llave, entrar al laboratorio es imposible.";
+							Game.startturn("ambulancia");
+						}
+						break;
+					case "cuidados intensivos":
+						l("opt1").innerHTML = "calle (infected)"
+						l("opt2").innerHTML = "código de vacuna covid-19";
+						txt = "Estás muy cerca. Abra el laboratorio para obtener el código antivirus.";
+						if(Math.random()<0.35){Game.detected()}
+						break;
+					case "código de vacuna covid-19":
+						if(Game.has("código: 4786")){
+							l("opt1").innerHTML = "calle (infected)";
+							l("opt2").innerHTML = "detener el virus";
+							txt = "¡Tienes la vacuna! Solo tienes que encontrar el camino al hospital.";
+							Game.addtoinv("vacuna");
+						}else{
+							txt = "¡No tienes la combinación de códigos para el antivirus!";
+							l("opt1").innerHTML = "calle (infected)";
+							l("opt2").innerHTML = "calle (infected)";
+						}
+						if(Math.random()<0.35){Game.detected()};
+						break;
+					case "detener el virus":
+						if(Math.random()<0.4){
+							txt = "Ahora puede detener activamente el virus e ayudar a otros.";
+							Game.win();
+						}else{
+							txt = "Las personas no te crean y te evitan a toda costa.";
+								if(Math.random()<0.3){
+									Game.death();
+								}else{
+									Game.detected();
+								}
+							}
+						break;
+					// default:
+					// 	console.warn("error @ " + pos);
+					// 	return "error";
+				}
+				l("log").innerHTML += "<p><b>" + pos + "</b>: " + txt + "</p>";
+				Game.turn++;
+				window.scrollBy(0,100);
+				},
+			opt1: function(){
+				var option = l("opt1").innerHTML;
+				Game.startturn(option);
+			},
+			opt2: function(){
+				var option = l("opt2").innerHTML;
+				Game.startturn(option);
+			},
+			
+			addtoinv: function(item){
+			var pushable = true;
+				for(var i=0; i<Game.inv.length; i++){
+					if(item == Game.inv[i]){
+						pushable = false;
+						break;
+					}
+					else{continue;}
+				}
+				if(pushable){
+					Game.inv.push(item);
+				}else{pushable = true}
+				
+				l("content").innerHTML = "<p>Tienes:</p>";
+				for(var i=0; i<Game.inv.length;i++){
+					if(i<Game.inv.length-1){
+						l("content").innerHTML += Game.inv[i] + ",<br>";
+					}else{
+						l("content").innerHTML += Game.inv[i] + ".<br>";
+					}
+				}	
+			},
+			has: function(what){
+				return Game.inv.includes(what);
+			},
+			detected: function(){
+				if(Game.crooks>0){
+					l("detopt").style.display = "block";
+					Game.has("mantener distancia")?l("mantener distancia").style.display = "initial":l("mantener distancia").style.display = "none";
+					Game.has("jabón")?l("jabón").style.display = "initial":l("jabón").style.display = "none";
+					Game.has("usar mascarilla")?l("mascarilla").style.display = "initial":l("mascarilla").style.display = "none";
+					Game.has("hospital")?l("hospital").style.display = "initial":l("hospital").style.display = "none";
+					l("opt1").disabled = true;
+					l("opt2").disabled = true;
+					if(Game.crooks==6){l("log").innerHTML += "<p>¡Los doctores te atienden pronto!";}
+				}else{
+					Game.unfreeze();
+					l("log").innerHTML += "Falsa Alarma. Te cuidaste. ¡No está infectado con coronavirus!";
+					
+				}	
+			},
+			defend: function(attr){
+				switch(attr){	
+					case "🧍↔️🧍mantener distancia":
+						if(Math.random()<0.05){
+							l("log").innerHTML += "<p>No se como lograste hacerlo, pero parece que mantuviste tu distancia. Estas a salvo por ahora!</p>";
+							Game.crooks--;
+							Game.unfreeze();
+							if(Math.random()<0.75){
+								Game.detected();
+							}
+						}else{
+							l("log").innerHTML += "<p>No tengo idea de lo que pensabas, pero no mantuviste la distancia.</p>";
+							if(Math.random()<0.5){Game.death();}else{Game.detected();}
+						}
+						break;
+					case "🧼jabón":
+						if(Math.random()<0.3){
+							l("log").innerHTML += "<p>Usaste el jabón para limpiarte las manos. Estás a salvo por ahora!</p>";
+							Game.crooks--;
+							Game.unfreeze();
+							if(Math.random()<0.7){Game.detected();}
+						}else{
+							l("log").innerHTML += "<p>Olvidaste lavarte las manos con jabón. ¡Estás infectado con coronavirus! </p>";
+							if(Math.random()<0.5){Game.death();}else{Game.detected();}
+						}
+						break;
+					case "😷mascarilla":
+						if(Game.ammo>0){
+							if(Math.random()<0.95){
+								l("log").innerHTML += "<p> ¡Usaste tu mascarilla apropiadamente! gran autodefensa.</p>";
+								Game.crooks--;
+								Game.ammo--;
+								Game.detected();
+								
+							}else{
+								l("log").innerHTML += "<p> Pobre.. ¡Olvidaste tu mascarilla!</p>";
+								if(Math.random()<0.25){Game.death();}else{Game.detected();}
+								Game.ammo--;
+							}
+						}else{
+							l("log").innerHTML += "<p> ¡Noooo! No te queda mas vida.</p>";
+							if(Math.random()<0.25){
+								Game.death();
+							}else{Game.detected();}
+						}
+						break;
+					case "🏥hospital":
+						if(Math.random()<0.77){
+							l("log").innerHTML += "<p>¡Esperamos que te atiendan pronto!</p>";
+							Game.crooks--;
+							Game.unfreeze();
+							if(Math.random()<0.11){Game.detected();}
+							
+						}else{
+							l("log").innerHTML += "<p>¡Demasiado tarde! Los cuidados intensivos están completos. Morirás.</p>";
+							if(Math.random()<0.6){Game.death();}else{Game.detected();}
+						}	
+						break;
+					case "🚑ambulance":
+						if(Math.random()<0.7){
+							l("log").innerHTML += "<p>Llegaste a la ambulancia! Estás en buenas manos ahora.</p>";
+							Game.unfreeze();
+						}else{
+							l("log").innerHTML += "<p>Demasiado tarde! No hay lugar para ti en la ambulancia.</p>";
+							if(Math.random()<0.95){Game.death();}else{Game.detected();}
+						}	
+						break;
+					case "💉escapar":
+						if(Math.random()<0.5){
+							if(Game.has("vacuna")){
+								l("log").innerHTML += "<p>¡Huyó con éxito del virus! ¡Y consiguió una vacuna! ¡Felicidades!</p>";
+								Game.win();
+							}else{
+								l("log").innerHTML += "<p>¡Huyó sin éxito del virus! Quedate en casa. ¡Vuelve dentro de 14 dias!</p>";
+								Game.unfreeze();
+								Game.startturn("virus");
+							}
+						}else{
+							l("log").innerHTML += "<p> Intentaste escapar del virus, pero el virus es poderoso. Esto no terminará bien.</p>";
+							Game.death();
+						}	
+						break;
+					default:
+						console.warn("atributo no encontrado @ " + attr);	
+				}
+			},
+			unfreeze: function(){
+				l("opt1").disabled = false;
+				l("opt2").disabled = false;
+				l("detopt").style.display = "none";
+			},
+			death: function(){
+				l("log").innerHTML += "<h1>Has muerto!</h1><p> ¿Inténtalo de nuevo? Actualiza la ventana del navegador..</p><p>Sobrevivir tomó " + Game.turn + " turnos.</p>";
+				l("log").style.backgroundColor = "red";
+				//l("log").style.backgroundImg = "./assets/img/rooms/ghost.jpg";
+				l("inv").style.display = "none";
+			},
+			win: function(){
+				l("log").innerHTML += "<h1>Felicidades!</h1><p>¡Sobreviviste al virus!</p><p> Sobrevivir tomó " + Game.turn + " turnos.</p>";
+				l("log").style.backgroundColor = "lime";
+				// l("log").style.backgroundImg = "./assets/img/rooms/balcon.jpg";
+				l("inv").style.display = "none";
+			}
+		}
+		Game.startturn("virus");
+	</script>
+	
+</body>
+</html>
